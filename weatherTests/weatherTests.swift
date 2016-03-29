@@ -21,9 +21,11 @@ class weatherTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testApiURL() {
+        let api = WeatherAPI(key: "acf4afa1abdb42982de642934f090ad5")
+        let url = api._urlForMethod(.Current)
+        let expectedURL = NSURL(string: "http://api.openweathermap.org/data/2.5/weather")
+        XCTAssert(url == expectedURL)
     }
     
     func testPerformanceExample() {
