@@ -29,6 +29,8 @@ class WeatherAPI: NSObject {
     let key: String!
     let city = City()
     
+    private let queue = NSOperationQueue()
+    
     private var lastUpdateTimestamp: NSTimeInterval {
         get {
             return NSUserDefaults.standardUserDefaults().doubleForKey("WeatherAPILastRefreshDate")
@@ -40,110 +42,71 @@ class WeatherAPI: NSObject {
         }
     }
     
-    private var currentRequests: [Request] = []
-    
     /// - parameters:
     ///   - key: the API key to use for the API calls. Get yours at http://openweathermap.org/appid.
     required init(key k: String) {
         key = k
         super.init()
         Alamofire.Manager.sharedInstance.startRequestsImmediately = false
+        queue.maxConcurrentOperationCount = 1
     }
     
     func updateWeather(completion: (ErrorType?) -> ()) {
-        
+
         let currentTime = NSDate().timeIntervalSince1970
         guard currentTime - lastUpdateTimestamp >= WeatherAPIMinimuRefreshRate else {
             return
         } // Last refresh was more than `WeatherAPIMinimumRefreshRate` seconds ago
-        
+ 
         // Update `lastUpdateTimestamp` so that multiple call won't happen at the same time
         lastUpdateTimestamp = currentTime
-        
-        // In case of error we reset `lastUpdateTimestamp` to allow for successive tries
+
         let internalCompletion = { (error: ErrorType?) -> () in
-            if error != nil {
+            if error != nil { // In case of error we reset `lastUpdateTimestamp` to allow for successive tries
                 self.lastUpdateTimestamp = 0
+                completion(error)
+            } else { // we call completion block only when the queue is empty
+                if self.queue.operationCount == 0 {
+                    completion(nil)
+                }
             }
-            completion(error)
         }
 
-        currentRequests.append(_updateCurrentWeather(internalCompletion))
-        currentRequests.append(_updateForecast(internalCompletion))
+        _updateCurrentWeather(internalCompletion)
+        _updateForecast(internalCompletion)
     }
     
     // MARK: - Private
     
-    func _updateCurrentWeather(completion: (ErrorType?) -> ()) -> Request {
+    func _updateCurrentWeather(completion: (ErrorType?) -> ()) {
         let url = _urlForMethod(.Current)
         var parameters = _defaultParameters()
         parameters["id"] = city.cityID
         
         let request = Alamofire.request(.GET, url, parameters: parameters)
-        _sendRequest(request, completion: completion) { (JSON) in
-            self.city.currentWeather = CurrentWeather(dictionary: JSON)
-            print("Retrieved current weather")
+        
+        let operation = NetworkOperation(request: request,
+                                         completion: completion) { (JSON) in
+                                            self.city.currentWeather = CurrentWeather(dictionary: JSON)
+                                            print("Retrieved current weather")
         }
-        return request
+        queue.addOperation(operation)
     }
     
-    func _updateForecast(completion: (ErrorType?) -> ())  -> Request {
+    func _updateForecast(completion: (ErrorType?) -> ()) {
         let url = _urlForMethod(.Forecast)
         var parameters = _defaultParameters()
         parameters["id"] = city.cityID
         parameters["cnt"] = "\(WeatherAPIForecastDayCount)"
         
         let request = Alamofire.request(.GET, url, parameters: parameters)
-        _sendRequest(request, completion: completion) { (JSON) in
-            self.city.daysForecasts = DayForecast.objectsFromJSON(JSON)
-            print("Retrieved forcast for the next \(self.city.daysForecasts.count) days")
+        
+        let operation = NetworkOperation(request: request,
+                                         completion: completion) { (JSON) in
+                                            self.city.daysForecasts = DayForecast.objectsFromJSON(JSON)
+                                            print("Retrieved forcast for the next \(self.city.daysForecasts.count) days")
         }
-        return request
-    }
-    
-    /// Makes sure only the last request completed will call its completion block
-    func _sendRequest(request: Request, completion: (ErrorType?) -> (), parser: (NSDictionary) -> ()) {
-        request.responseJSON { response in
-            dispatch_async(dispatch_get_main_queue(), {
-                // Remove finished request from `currentRequests` array
-                print("Comparing")
-                let index = self.currentRequests.indexOf({ (aRequest) -> Bool in
-                    // Two requests are equal if the following condition is met
-                    print("\(aRequest.task.taskIdentifier) - \(request.task.taskIdentifier)")
-                    return aRequest.task.taskIdentifier == request.task.taskIdentifier
-                })! // Forcing unwrapping because `request` is the same object that is appended to `currentRequests` so we're bound to find an index
-                self.currentRequests.removeAtIndex(index)
-                
-                switch response.result {
-                case .Success(let JSON):
-                    print("Success with JSON: \(JSON)")
-                    
-                    // Parse objects
-                    let response = JSON as! NSDictionary
-                    parser(response)
-
-                    // Call completion block if needed
-                    if self.currentRequests.count == 0 { // no more requests processing
-                        completion(nil)
-                    }
-                case .Failure(let error):
-                    print("Request failed with error: \(error)")
-                    guard !(error.domain == NSURLErrorDomain && error.code != NSURLErrorCancelled) else {
-                        // Request was cancelled
-                        return
-                    }
-                    
-                    // remove all current requests
-                    for r in self.currentRequests {
-                        r.cancel()
-                    }
-                    self.currentRequests = []
-                    completion(error)
-                }
-            })
-        }
-        print("Resuming request: \(request.request?.URLString)")
-        request.resume()
+        queue.addOperation(operation)
     }
 }
 
