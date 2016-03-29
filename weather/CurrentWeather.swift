@@ -19,7 +19,7 @@ class CurrentWeather: NSObject {
     
     required init(dictionary: NSDictionary!) {
         weatherDescription = dictionary.valueForKeyPath("weather.description") as! String
-        temperature = Float(dictionary.valueForKeyPath("main.temp") as! String)!
+        temperature = (dictionary.valueForKeyPath("main.temp") as! NSNumber).floatValue
         cloudiness = dictionary.valueForKeyPath("clouds.all") as! Int
         pressure = dictionary.valueForKeyPath("main.pressure") as! Int
         sunrise = NSDate(timeIntervalSince1970:

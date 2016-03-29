@@ -17,9 +17,9 @@ class DayForecast: NSObject {
     required init(dictionary: NSDictionary) {
         date = NSDate(timeIntervalSince1970:
             NSTimeInterval( dictionary.valueForKeyPath("dt") as! Int ))
-        temperatureMin = Float(dictionary.valueForKeyPath("temp.min") as! String)!
-        temperatureMax = Float(dictionary.valueForKeyPath("temp.max") as! String)!
-        rainHeight = Float(dictionary.valueForKeyPath("rain") as! String)!
+        temperatureMin = (dictionary.valueForKeyPath("temp.min") as! NSNumber).floatValue
+        temperatureMax = (dictionary.valueForKeyPath("temp.max") as! NSNumber).floatValue
+        rainHeight = (dictionary.valueForKeyPath("rain") as? NSNumber)?.floatValue
     }
     
     class func objectsFromJSON(JSON: NSDictionary) -> [DayForecast] {
