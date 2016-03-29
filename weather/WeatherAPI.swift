@@ -57,10 +57,19 @@ class WeatherAPI: NSObject {
             return
         } // Last refresh was more than `WeatherAPIMinimumRefreshRate` seconds ago
         
+        // Update `lastUpdateTimestamp` so that multiple call won't happen at the same time
         lastUpdateTimestamp = currentTime
         
-        currentRequests.append(_updateCurrentWeather(completion))
-        //currentRequests.append(_updateForecast(completion))
+        // In case of error we reset `lastUpdateTimestamp` to allow for successive tries
+        let internalCompletion = { (error: ErrorType?) -> () in
+            if error != nil {
+                self.lastUpdateTimestamp = 0
+            }
+            completion(error)
+        }
+
+        currentRequests.append(_updateCurrentWeather(internalCompletion))
+        currentRequests.append(_updateForecast(internalCompletion))
     }
     
     // MARK: - Private
@@ -73,6 +82,7 @@ class WeatherAPI: NSObject {
         let request = Alamofire.request(.GET, url, parameters: parameters)
         _sendRequest(request, completion: completion) { (JSON) in
             self.city.currentWeather = CurrentWeather(dictionary: JSON)
+            print("Retrieved current weather")
         }
         return request
     }
@@ -86,24 +96,53 @@ class WeatherAPI: NSObject {
         let request = Alamofire.request(.GET, url, parameters: parameters)
         _sendRequest(request, completion: completion) { (JSON) in
             self.city.daysForecasts = DayForecast.objectsFromJSON(JSON)
+            print("Retrieved forcast for the next \(self.city.daysForecasts.count) days")
         }
         return request
     }
     
+    /// Makes sure only the last request completed will call its completion block
     func _sendRequest(request: Request, completion: (ErrorType?) -> (), parser: (NSDictionary) -> ()) {
         request.responseJSON { response in
-            switch response.result {
-            case .Success(let JSON):
-                print("Success with JSON: \(JSON)")
+            dispatch_async(dispatch_get_main_queue(), {
+                // Remove finished request from `currentRequests` array
+                print("Comparing")
+                let index = self.currentRequests.indexOf({ (aRequest) -> Bool in
+                    // Two requests are equal if the following condition is met
+                    print("\(aRequest.task.taskIdentifier) - \(request.task.taskIdentifier)")
+                    return aRequest.task.taskIdentifier == request.task.taskIdentifier
+                })! // Forcing unwrapping because `request` is the same object that is appended to `currentRequests` so we're bound to find an index
+                self.currentRequests.removeAtIndex(index)
                 
-                let response = JSON as! NSDictionary
-                parser(response)
-                completion(nil)
-            case .Failure(let error):
-                print("Request failed with error: \(error)")
-                completion(error)
-            }
+                switch response.result {
+                case .Success(let JSON):
+                    print("Success with JSON: \(JSON)")
+                    
+                    // Parse objects
+                    let response = JSON as! NSDictionary
+                    parser(response)
+
+                    // Call completion block if needed
+                    if self.currentRequests.count == 0 { // no more requests processing
+                        completion(nil)
+                    }
+                case .Failure(let error):
+                    print("Request failed with error: \(error)")
+                    guard !(error.domain == NSURLErrorDomain && error.code != NSURLErrorCancelled) else {
+                        // Request was cancelled
+                        return
+                    }
+                    
+                    // remove all current requests
+                    for r in self.currentRequests {
+                        r.cancel()
+                    }
+                    self.currentRequests = []
+                    completion(error)
+                }
+            })
         }
+        print("Resuming request: \(request.request?.URLString)")
         request.resume()
     }
 }

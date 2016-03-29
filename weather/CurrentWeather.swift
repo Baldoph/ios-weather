@@ -18,7 +18,7 @@ class CurrentWeather: NSObject {
     var pressure: Int!
     
     required init(dictionary: NSDictionary!) {
-        weatherDescription = dictionary.valueForKeyPath("weather.description") as! String
+        weatherDescription = dictionary["weather"]![0]["description"] as! String
         temperature = (dictionary.valueForKeyPath("main.temp") as! NSNumber).floatValue
         cloudiness = dictionary.valueForKeyPath("clouds.all") as! Int
         pressure = dictionary.valueForKeyPath("main.pressure") as! Int

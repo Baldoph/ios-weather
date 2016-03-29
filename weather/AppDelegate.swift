@@ -19,8 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        api._updateForecast { (error) in
-            
+        api.updateWeather { (error) in
+            print("Did update weather")
         }
         
         return true
