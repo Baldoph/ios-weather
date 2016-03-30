@@ -86,10 +86,10 @@ class WeatherViewController: UIViewController {
             weatherInfoView.origin = CGPointZero
             tableView.tableFooterView = weatherInfoView
         } else if traitCollection.verticalSizeClass == UIUserInterfaceSizeClass.Compact {
-            //weatherInfoView.autoresizingMask = [.FlexibleWidth, .FlexibleTopMargin, .FlexibleRightMargin]
+            weatherInfoView.autoresizingMask = [.FlexibleWidth, .FlexibleTopMargin, .FlexibleBottomMargin]
             tableView.tableFooterView = nil
             view.addSubview(weatherInfoView)
-            weatherInfoView.width = tableView.width
+            weatherInfoView.width = view.bounds.size.width / 2
             weatherInfoView.rightMargin = 0
             weatherInfoView.centerVertically()
         }
@@ -173,7 +173,7 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource {
         var scrollPercent = (scrollView.contentOffset.y + scrollView.contentInset.top) / distanceToFullPercent
         if scrollPercent > 1 { scrollPercent = 1 }
         
-        headerViewTopConstraint.constant = round((1 - scrollPercent) * headerViewTopConstraintOriginalValue)
+        headerViewTopConstraint.constant = roundScreen((1 - scrollPercent) * headerViewTopConstraintOriginalValue)
         
         // alpha goes from 1 to 0 on 70% of total distance
         tempLabel.alpha = 1 - scrollPercent / 0.7
