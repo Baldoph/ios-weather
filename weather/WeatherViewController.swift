@@ -61,11 +61,9 @@ class WeatherViewController: UIViewController {
         
         self.updateUI()
         
-        shared.api.updateWeather { (error) in
-            if error == nil {
-                self.updateUI()
-            }
-        }
+        refreshData()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(WeatherViewController.refreshData), name: UIApplicationWillEnterForegroundNotification, object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -83,6 +81,14 @@ class WeatherViewController: UIViewController {
     }
     
     // MARK: - Business
+    
+    func refreshData() {
+        shared.api.updateWeather { (error) in
+            if error == nil {
+                self.updateUI()
+            }
+        }
+    }
     
     func updateUI() {
         tableView.reloadData()
