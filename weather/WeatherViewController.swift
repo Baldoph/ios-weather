@@ -21,12 +21,12 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var weatherLabel: UILabel!
     @IBOutlet weak var tempLabel: UILabel!
     
-    @IBOutlet var weatherInforView: WeatherInfoView!
+    @IBOutlet var weatherInfoView: WeatherInfoView!
     
     private var weekdayFormatter: NSDateFormatter!
     private var timeFormatter: NSDateFormatter!
     private var headerViewTopConstraintOriginalValue: CGFloat!
-    private var distanceToFullPercent: CGFloat = 0
+    private var distanceToFullPercent: CGFloat!
 
     private var weatherInfoTitles: [WeatherInfoType] = [.Sunrise, .Sunset, .Clouds, .Rain, .Humidity, .Pressure]
     
@@ -58,11 +58,6 @@ class WeatherViewController: UIViewController {
         
         tableView.registerNib(UINib(nibName: "ForecastCell", bundle: nil), forCellReuseIdentifier: CellIdForecastCell)
         
-        if traitCollection.verticalSizeClass == UIUserInterfaceSizeClass.Regular {
-            
-            tableView.tableFooterView = weatherInforView
-        }
-        
         self.updateUI()
         
         refreshData()
@@ -84,13 +79,21 @@ class WeatherViewController: UIViewController {
         distanceToFullPercent = tableView.contentInset.top - backgroundViewFrame.maxY
     }
     
-//    override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
-//        super.traitCollectionDidChange(previousTraitCollection)
-//        if traitCollection.verticalSizeClass == UIUserInterfaceSizeClass.Regular {
-//            tableView.tableFooterView = weatherInforView
-//            weatherInforView.translatesAutoresizingMaskIntoConstraints = true
-//        }
-//    }
+    override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.verticalSizeClass == UIUserInterfaceSizeClass.Regular {
+            weatherInfoView.removeFromSuperview()
+            weatherInfoView.origin = CGPointZero
+            tableView.tableFooterView = weatherInfoView
+        } else if traitCollection.verticalSizeClass == UIUserInterfaceSizeClass.Compact {
+            //weatherInfoView.autoresizingMask = [.FlexibleWidth, .FlexibleTopMargin, .FlexibleRightMargin]
+            tableView.tableFooterView = nil
+            view.addSubview(weatherInfoView)
+            weatherInfoView.width = tableView.width
+            weatherInfoView.rightMargin = 0
+            weatherInfoView.centerVertically()
+        }
+    }
     
     // MARK: - Business
     
@@ -104,7 +107,7 @@ class WeatherViewController: UIViewController {
     
     func updateUI() {
         tableView.reloadData()
-        updateWetherInfoView()
+        updateWeatherInfoView()
         
         cityLabel.text = shared.api.city.name
         
@@ -117,22 +120,22 @@ class WeatherViewController: UIViewController {
         }
     }
     
-    func updateWetherInfoView() {
+    func updateWeatherInfoView() {
         
         for i in 0..<weatherInfoTitles.count {
             let type = weatherInfoTitles[i]
-            let label = weatherInforView.titleLabelAtIndex(i)
+            let label = weatherInfoView.titleLabelAtIndex(i)
             label.text = CurrentWeather.descriptionForWeatherInfoType(type) + ":"
         }
         
         if let currentWeather = shared.api.city.currentWeather {
             for i in 0..<weatherInfoTitles.count {
                 let type = weatherInfoTitles[i]
-                let label = weatherInforView.valueLabelAtIndex(i)
+                let label = weatherInfoView.valueLabelAtIndex(i)
                 label.text = currentWeather.stringValueForWeatherInfoType(type)
             }
         } else {
-            weatherInforView.clearAllValues()
+            weatherInfoView.clearAllValues()
         }
     }
 }
@@ -165,8 +168,8 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource {
     
     func scrollViewDidScroll(scrollView: UIScrollView) {
         
-        let backgroundViewFrame = view.convertRect(headerTitleBackgroundView.frame, fromView:headerTitleBackgroundView.superview)
-        let distanceToFullPercent = scrollView.contentInset.top - backgroundViewFrame.maxY
+        guard distanceToFullPercent != nil else { return }
+        
         var scrollPercent = (scrollView.contentOffset.y + scrollView.contentInset.top) / distanceToFullPercent
         if scrollPercent > 1 { scrollPercent = 1 }
         
