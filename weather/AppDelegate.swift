@@ -17,12 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var api = WeatherAPI(key: "acf4afa1abdb42982de642934f090ad5")
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        
-        api.updateWeather { (error) in
-            print("Did update weather")
-        }
-        
+    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {        
         return true
     }
 

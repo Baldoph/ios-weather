@@ -27,7 +27,7 @@ enum WeatherAPIMethod: String {
 class WeatherAPI: NSObject {
     
     let key: String!
-    let city = City()
+    var city = City()
     
     private let queue = NSOperationQueue()
     
@@ -42,6 +42,13 @@ class WeatherAPI: NSObject {
         }
     }
     
+    private lazy var archiveURL: NSURL = {
+        var url = NSFileManager.defaultManager().URLsForDirectory(NSSearchPathDirectory.CachesDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask).last!
+        try! NSFileManager.defaultManager().createDirectoryAtURL(url, withIntermediateDirectories: true, attributes: nil)
+        url = url.URLByAppendingPathComponent("archive")
+        return url
+    }()
+    
     /// - parameters:
     ///   - key: the API key to use for the API calls. Get yours at http://openweathermap.org/appid.
     required init(key k: String) {
@@ -49,6 +56,7 @@ class WeatherAPI: NSObject {
         super.init()
         Alamofire.Manager.sharedInstance.startRequestsImmediately = false
         queue.maxConcurrentOperationCount = 1
+        _readCity()
     }
     
     func updateWeather(completion: (ErrorType?) -> ()) {
@@ -65,7 +73,11 @@ class WeatherAPI: NSObject {
             if error != nil { // In case of error we reset `lastUpdateTimestamp` to allow for successive tries
                 self.lastUpdateTimestamp = 0
                 completion(error)
-            } else { // we call completion block only when the queue is empty
+            } else {
+                // Save city object on disk
+                self._writeCity()
+                
+                // We call completion block only when the queue is empty
                 if self.queue.operationCount == 0 {
                     completion(nil)
                 }
@@ -104,9 +116,19 @@ class WeatherAPI: NSObject {
         let operation = NetworkOperation(request: request,
                                          completion: completion) { (JSON) in
                                             self.city.daysForecasts = DayForecast.objectsFromJSON(JSON)
-                                            print("Retrieved forcast for the next \(self.city.daysForecasts.count) days")
+                                            print("Retrieved forcast for the next \(self.city.daysForecasts!.count) days")
         }
         queue.addOperation(operation)
+    }
+    
+    func _readCity() {
+        if let city = NSKeyedUnarchiver.unarchiveObjectWithFile(archiveURL.path!) as? City {
+            self.city = city
+        }
+    }
+    
+    func _writeCity() {
+        NSKeyedArchiver.archiveRootObject(self.city, toFile: archiveURL.path!)
     }
 }
 

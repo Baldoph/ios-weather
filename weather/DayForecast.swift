@@ -8,18 +8,16 @@
 
 import UIKit
 
-class DayForecast: NSObject {
+class DayForecast: NSObject, NSCoding {
     var date: NSDate!
-    var temperatureMin: Float!
-    var temperatureMax: Float!
-    var rainHeight: Float?
+    var temperatureMin: NSNumber!
+    var temperatureMax: NSNumber!
     
     required init(dictionary: NSDictionary) {
         date = NSDate(timeIntervalSince1970:
             NSTimeInterval( dictionary.valueForKeyPath("dt") as! Int ))
-        temperatureMin = (dictionary.valueForKeyPath("temp.min") as! NSNumber).floatValue
-        temperatureMax = (dictionary.valueForKeyPath("temp.max") as! NSNumber).floatValue
-        rainHeight = (dictionary.valueForKeyPath("rain") as? NSNumber)?.floatValue
+        temperatureMin = (dictionary.valueForKeyPath("temp.min") as! NSNumber)
+        temperatureMax = (dictionary.valueForKeyPath("temp.max") as! NSNumber)
     }
     
     class func objectsFromJSON(JSON: NSDictionary) -> [DayForecast] {
@@ -29,4 +27,18 @@ class DayForecast: NSObject {
         }
         return results
     }
+    
+    required init?(coder aDecoder: NSCoder) {
+        date = aDecoder.decodeObjectForKey("date") as? NSDate
+        temperatureMin = aDecoder.decodeObjectForKey("temperatureMin") as? NSNumber
+        temperatureMax = aDecoder.decodeObjectForKey("temperatureMax") as? NSNumber
+        super.init()
+    }
+    
+    func encodeWithCoder(aCoder: NSCoder) {
+        aCoder.encodeObject(date, forKey: "date")
+        aCoder.encodeObject(temperatureMin, forKey: "temperatureMin")
+        aCoder.encodeObject(temperatureMax, forKey: "temperatureMax")
+    }
+
 }
