@@ -12,7 +12,6 @@ private let CellIdForecastCell = "CellIdForecastCell"
 
 class WeatherViewController: UIViewController {
 
-    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var headerViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var headerView: UIView!
@@ -20,14 +19,13 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var weatherLabel: UILabel!
     @IBOutlet weak var tempLabel: UILabel!
-    
     @IBOutlet var weatherInfoView: WeatherInfoView!
     
     private var weekdayFormatter: NSDateFormatter!
     private var timeFormatter: NSDateFormatter!
     private var headerViewTopConstraintOriginalValue: CGFloat!
+    /// The space between the top table view cell and the bottom of `backgroundViewFrame`
     private var distanceToFullPercent: CGFloat!
-
     private var weatherInfoTitles: [WeatherInfoType] = [.Sunrise, .Sunset, .Clouds, .Rain, .Humidity, .Pressure]
     
     // MARK: - Object lifecycle
@@ -47,52 +45,59 @@ class WeatherViewController: UIViewController {
         weekdayFormatter.dateFormat = "EEEE"
         timeFormatter = NSDateFormatter()
         timeFormatter.timeStyle = .ShortStyle
+        // Refresh data when app enters foreground
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(WeatherViewController.refreshData), name: UIApplicationWillEnterForegroundNotification, object: nil)
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     // MARK: - View Controller lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Set title
         title = NSLocalizedString("Weather", comment: "WeatherTitle")
+        
+        // Save the original value of the constraint to use in -scrollViewDidScroll:
         headerViewTopConstraintOriginalValue = headerViewTopConstraint.constant
         
         tableView.registerNib(UINib(nibName: "ForecastCell", bundle: nil), forCellReuseIdentifier: CellIdForecastCell)
         
         self.updateUI()
-        
         refreshData()
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(WeatherViewController.refreshData), name: UIApplicationWillEnterForegroundNotification, object: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
         var contentInset = tableView.contentInset
-        contentInset.top = headerView.frame.maxY
-        contentInset.bottom = 12 // extra margin
+        contentInset.top = headerView.frame.maxY // table view content won't be overlapped by header view
+        contentInset.bottom = 12 // extra bottom margin
         tableView.contentInset = contentInset
-        
-        tableView.contentOffset = CGPoint(x: 0, y: -contentInset.top)
+        tableView.contentOffset = CGPoint(x: 0, y: -contentInset.top) // scroll to top
         
         let backgroundViewFrame = view.convertRect(headerTitleBackgroundView.frame, fromView:headerTitleBackgroundView.superview)
+        // The space between the top table view cell and the bottom of `backgroundViewFrame`
         distanceToFullPercent = tableView.contentInset.top - backgroundViewFrame.maxY
     }
     
     override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if traitCollection.verticalSizeClass == UIUserInterfaceSizeClass.Regular {
+            // In portrait the `weatherInfoView` is handled by the table view as its footer view
             weatherInfoView.removeFromSuperview()
             weatherInfoView.origin = CGPointZero
             tableView.tableFooterView = weatherInfoView
         } else if traitCollection.verticalSizeClass == UIUserInterfaceSizeClass.Compact {
-            weatherInfoView.autoresizingMask = [.FlexibleWidth, .FlexibleTopMargin, .FlexibleBottomMargin]
+            // In landscape we manually place the `weatherInfoView` on the right hand side of the screen
             tableView.tableFooterView = nil
+            weatherInfoView.autoresizingMask = [.FlexibleWidth, .FlexibleTopMargin, .FlexibleBottomMargin]
             view.addSubview(weatherInfoView)
             weatherInfoView.width = view.bounds.size.width / 2
             weatherInfoView.rightMargin = 0
-            weatherInfoView.centerVertically()
-            weatherInfoView.setNeedsLayout()
+            weatherInfoView.centerVertically()            
         }
     }
     
@@ -171,12 +176,12 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource {
         
         guard distanceToFullPercent != nil else { return }
         
-        var scrollPercent = (scrollView.contentOffset.y + scrollView.contentInset.top) / distanceToFullPercent
-        if scrollPercent > 1 { scrollPercent = 1 }
+        var progress = (scrollView.contentOffset.y + scrollView.contentInset.top) / distanceToFullPercent
+        if progress > 1 { progress = 1 }
         
-        headerViewTopConstraint.constant = roundScreen((1 - scrollPercent) * headerViewTopConstraintOriginalValue)
+        headerViewTopConstraint.constant = roundScreen((1 - progress) * headerViewTopConstraintOriginalValue)
         
-        // alpha goes from 1 to 0 on 70% of total distance
-        tempLabel.alpha = 1 - scrollPercent / 0.7
+        // Alpha goes from 1 to 0 when progress goes from 0 to 70%
+        tempLabel.alpha = 1 - progress / 0.7
     }
 }

@@ -26,6 +26,7 @@ enum WeatherAPIMethod: String {
 }
 
 /// Handles the calls to the http://openweathermap.org API and the parsing of the results
+/// The results are stored in a City object that is itself archived on the disk. See `-readCity()` and `-writeCity()`.
 class WeatherAPI: NSObject {
     
     let key: String!
@@ -79,6 +80,8 @@ class WeatherAPI: NSObject {
             super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
         }
     }
+    
+    // MARK: - Business
     
     func updateWeather(completion: (ErrorType?) -> ()) {
 
@@ -158,8 +161,9 @@ class WeatherAPI: NSObject {
     }
 }
 
-/// Builders
+// MARK: - Builders
 extension WeatherAPI {
+    
     func _urlForMethod(method: WeatherAPIMethod) -> NSURL {
         let components = NSURLComponents()
         components.scheme = "http"

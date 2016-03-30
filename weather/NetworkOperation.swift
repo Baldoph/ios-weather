@@ -24,8 +24,6 @@ class NetworkOperation : ConcurrentOperation {
         super.init()
     }
     
-    // when the operation actually starts, this is the method that will be called
-    
     override func main() {
         request.responseJSON { response in
             self.completeOperation()
@@ -50,8 +48,6 @@ class NetworkOperation : ConcurrentOperation {
         }
         request.resume()
     }
-    
-    // we'll also support canceling the request, in case we need it
     
     override func cancel() {
         request.cancel()
