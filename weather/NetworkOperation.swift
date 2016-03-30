@@ -39,7 +39,7 @@ class NetworkOperation : ConcurrentOperation {
                     })
                 case .Failure(let error):
                     print("Request failed with error: \(error)")
-                    guard !(error.domain == NSURLErrorDomain && error.code != NSURLErrorCancelled) else {
+                    guard !(error.domain == NSURLErrorDomain && error.code == NSURLErrorCancelled) else {
                         // Request was cancelled
                         return
                     }

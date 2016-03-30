@@ -91,8 +91,13 @@ class WeatherAPI: NSObject {
         lastUpdateTimestamp = currentTime
 
         let internalCompletion = { (error: ErrorType?) -> () in
-            if error != nil { // In case of error we reset `lastUpdateTimestamp` to allow for successive tries
+            if error != nil {
+                // Reset `lastUpdateTimestamp` to allow for successive tries
                 self.lastUpdateTimestamp = 0
+                
+                // Cancel all pending requests
+                self.queue.cancelAllOperations()
+                
                 completion(error)
             } else {
                 // Save city object on disk
