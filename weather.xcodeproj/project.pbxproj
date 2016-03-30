@@ -127,6 +127,7 @@
 				938931221CAAAAAB00D2EC51 /* Model */,
 				93C9BC6A1CAAE434001735AE /* Business */,
 				9359CDFF1CABC027001A6A69 /* View Controllers */,
+				935C1F021CAC268400B84585 /* Tools */,
 				933EF2501CAA857C00DAC979 /* Main.storyboard */,
 				933EF2561CAA857C00DAC979 /* Assets.xcassets */,
 				933EF2581CAA857C00DAC979 /* LaunchScreen.storyboard */,
@@ -164,11 +165,18 @@
 			name = WeatherViewController;
 			sourceTree = "<group>";
 		};
+		935C1F021CAC268400B84585 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				935C1F001CAC242500B84585 /* UIView+Layout.swift */,
+			);
+			name = Tools;
+			sourceTree = "<group>";
+		};
 		938931221CAAAAAB00D2EC51 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				938931181CAAAAA700D2EC51 /* City.swift */,
-				935C1F001CAC242500B84585 /* UIView+Layout.swift */,
 				938931191CAAAAA700D2EC51 /* CurrentWeather.swift */,
 				9389311A1CAAAAA700D2EC51 /* DayForecast.swift */,
 			);
