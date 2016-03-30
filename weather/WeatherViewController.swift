@@ -57,7 +57,11 @@ class WeatherViewController: UIViewController {
         headerViewTopConstraintOriginalValue = headerViewTopConstraint.constant
         
         tableView.registerNib(UINib(nibName: "ForecastCell", bundle: nil), forCellReuseIdentifier: CellIdForecastCell)
-        tableView.tableFooterView = weatherInforView
+        
+        if traitCollection.verticalSizeClass == UIUserInterfaceSizeClass.Regular {
+            
+            tableView.tableFooterView = weatherInforView
+        }
         
         self.updateUI()
         
@@ -79,6 +83,14 @@ class WeatherViewController: UIViewController {
         let backgroundViewFrame = view.convertRect(headerTitleBackgroundView.frame, fromView:headerTitleBackgroundView.superview)
         distanceToFullPercent = tableView.contentInset.top - backgroundViewFrame.maxY
     }
+    
+//    override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
+//        super.traitCollectionDidChange(previousTraitCollection)
+//        if traitCollection.verticalSizeClass == UIUserInterfaceSizeClass.Regular {
+//            tableView.tableFooterView = weatherInforView
+//            weatherInforView.translatesAutoresizingMaskIntoConstraints = true
+//        }
+//    }
     
     // MARK: - Business
     
