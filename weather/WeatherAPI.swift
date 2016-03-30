@@ -59,7 +59,7 @@ class WeatherAPI: NSObject {
         Alamofire.Manager.sharedInstance.startRequestsImmediately = false
         queue.maxConcurrentOperationCount = 1
         _readCity()
-        queue.addObserver(self, forKeyPath: "operationCount", options: [], context: &KVOQueueOperationCountContext)
+        queue.addObserver(self, forKeyPath: "operationCount", options: .New, context: &KVOQueueOperationCountContext)
     }
     
     deinit {
@@ -69,7 +69,12 @@ class WeatherAPI: NSObject {
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         if context == &KVOQueueOperationCountContext {
             let app = UIApplication.sharedApplication()
-            let newValue = 
+            let newValue = (change![NSKeyValueChangeNewKey] as! NSNumber).intValue
+            if newValue <= 0 && app.networkActivityIndicatorVisible { // no more operations in queue
+                app.networkActivityIndicatorVisible = false
+            } else if newValue > 0 && !app.networkActivityIndicatorVisible { // new operations in queue
+                app.networkActivityIndicatorVisible = true
+            }
         } else {
             super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
         }
