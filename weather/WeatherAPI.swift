@@ -171,7 +171,8 @@ extension WeatherAPI {
     func _defaultParameters() -> [String: String] {
         return [
             "APPID": key,
-            "units": "metric"
+            "units": "metric",
+            "lang": NSLocalizedString("lang", comment: "")
         ]
     }
 }

@@ -10,6 +10,7 @@ import UIKit
 
 class City: NSObject, NSCoding {
     var name = "Lyon"
+    /// cityID for the city Lyon, FR found on the [API documentation](http://openweathermap.org/current#cityid)
     var cityID = "6454573"
     var currentWeather: CurrentWeather?
     var daysForecasts: [DayForecast]?

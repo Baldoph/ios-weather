@@ -18,11 +18,13 @@
 		9359CE051CABC0BE001A6A69 /* ForecastCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9359CE031CABC0BE001A6A69 /* ForecastCell.xib */; };
 		9359CE0C1CABCBB0001A6A69 /* WeatherInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9359CE0B1CABCBB0001A6A69 /* WeatherInfoView.swift */; };
 		935C1F011CAC242500B84585 /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935C1F001CAC242500B84585 /* UIView+Layout.swift */; };
+		935C1F071CAC2A3900B84585 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 935C1F051CAC2A3900B84585 /* Localizable.strings */; };
 		9389311D1CAAAAA700D2EC51 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938931181CAAAAA700D2EC51 /* City.swift */; };
 		9389311E1CAAAAA700D2EC51 /* CurrentWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938931191CAAAAA700D2EC51 /* CurrentWeather.swift */; };
 		9389311F1CAAAAA700D2EC51 /* DayForecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9389311A1CAAAAA700D2EC51 /* DayForecast.swift */; };
 		938931201CAAAAA700D2EC51 /* WeatherAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9389311B1CAAAAA700D2EC51 /* WeatherAPI.swift */; };
 		938931211CAAAAA700D2EC51 /* WeatherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9389311C1CAAAAA700D2EC51 /* WeatherViewController.swift */; };
+		93A253A81CAC2D5800E2BE7D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 93A253A61CAC2D5800E2BE7D /* InfoPlist.strings */; };
 		93C9BC691CAAE42F001735AE /* ConcurrentOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C9BC681CAAE42F001735AE /* ConcurrentOperation.swift */; };
 		93C9BC6C1CAAE450001735AE /* NetworkOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C9BC6B1CAAE450001735AE /* NetworkOperation.swift */; };
 /* End PBXBuildFile section */
@@ -53,11 +55,17 @@
 		9359CE031CABC0BE001A6A69 /* ForecastCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ForecastCell.xib; sourceTree = "<group>"; };
 		9359CE0B1CABCBB0001A6A69 /* WeatherInfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherInfoView.swift; sourceTree = "<group>"; };
 		935C1F001CAC242500B84585 /* UIView+Layout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+Layout.swift"; sourceTree = "<group>"; };
+		935C1F031CAC2A2400B84585 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
+		935C1F041CAC2A2400B84585 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		935C1F061CAC2A3900B84585 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		935C1F081CAC2A4000B84585 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		938931181CAAAAA700D2EC51 /* City.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		938931191CAAAAA700D2EC51 /* CurrentWeather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentWeather.swift; sourceTree = "<group>"; };
 		9389311A1CAAAAA700D2EC51 /* DayForecast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayForecast.swift; sourceTree = "<group>"; };
 		9389311B1CAAAAA700D2EC51 /* WeatherAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherAPI.swift; sourceTree = "<group>"; };
 		9389311C1CAAAAA700D2EC51 /* WeatherViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeatherViewController.swift; sourceTree = "<group>"; };
+		93A253A71CAC2D5800E2BE7D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		93A253A91CAC2D5B00E2BE7D /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		93C9BC681CAAE42F001735AE /* ConcurrentOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConcurrentOperation.swift; sourceTree = "<group>"; };
 		93C9BC6B1CAAE450001735AE /* NetworkOperation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkOperation.swift; sourceTree = "<group>"; };
 		B309675E1C2FACE2CB24BD4A /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -132,6 +140,8 @@
 				933EF2561CAA857C00DAC979 /* Assets.xcassets */,
 				933EF2581CAA857C00DAC979 /* LaunchScreen.storyboard */,
 				933EF25B1CAA857C00DAC979 /* Info.plist */,
+				93A253A61CAC2D5800E2BE7D /* InfoPlist.strings */,
+				935C1F051CAC2A3900B84585 /* Localizable.strings */,
 				933EF2531CAA857C00DAC979 /* weather.xcdatamodeld */,
 			);
 			path = weather;
@@ -261,6 +271,7 @@
 			knownRegions = (
 				en,
 				Base,
+				fr,
 			);
 			mainGroup = 933EF2401CAA857C00DAC979;
 			productRefGroup = 933EF24A1CAA857C00DAC979 /* Products */;
@@ -278,6 +289,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				935C1F071CAC2A3900B84585 /* Localizable.strings in Resources */,
+				93A253A81CAC2D5800E2BE7D /* InfoPlist.strings in Resources */,
 				9359CE051CABC0BE001A6A69 /* ForecastCell.xib in Resources */,
 				933EF25A1CAA857C00DAC979 /* LaunchScreen.storyboard in Resources */,
 				933EF2571CAA857C00DAC979 /* Assets.xcassets in Resources */,
@@ -385,6 +398,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				933EF2511CAA857C00DAC979 /* Base */,
+				935C1F031CAC2A2400B84585 /* fr */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -393,8 +407,27 @@
 			isa = PBXVariantGroup;
 			children = (
 				933EF2591CAA857C00DAC979 /* Base */,
+				935C1F041CAC2A2400B84585 /* fr */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		935C1F051CAC2A3900B84585 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				935C1F061CAC2A3900B84585 /* en */,
+				935C1F081CAC2A4000B84585 /* fr */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		93A253A61CAC2D5800E2BE7D /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				93A253A71CAC2D5800E2BE7D /* en */,
+				93A253A91CAC2D5B00E2BE7D /* fr */,
+			);
+			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

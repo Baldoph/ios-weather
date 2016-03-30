@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  weather
+
+  Created by Baldoph Pourprix on 30/03/2016.
+  Copyright © 2016 Baldoph Pourprix. All rights reserved.
+*/
+
+"CFBundleName" = "Météo";

@@ -92,6 +92,7 @@ class WeatherViewController: UIViewController {
             weatherInfoView.width = view.bounds.size.width / 2
             weatherInfoView.rightMargin = 0
             weatherInfoView.centerVertically()
+            weatherInfoView.setNeedsLayout()
         }
     }
     
