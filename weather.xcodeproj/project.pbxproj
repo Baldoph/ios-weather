@@ -235,6 +235,7 @@
 				TargetAttributes = {
 					933EF2481CAA857C00DAC979 = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = Q348YUJ44Y;
 					};
 					933EF25F1CAA857D00DAC979 = {
 						CreatedOnToolsVersion = 7.3;
@@ -477,7 +478,9 @@
 			baseConfigurationReference = E1C27DCD9BE0F93D623F9392 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = weather/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.worldline.weather;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -489,7 +492,9 @@
 			baseConfigurationReference = 15A5E94A1056F5396A0A8A2B /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = weather/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.worldline.weather;
 				PRODUCT_NAME = "$(TARGET_NAME)";

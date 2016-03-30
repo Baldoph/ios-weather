@@ -16,6 +16,7 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var headerViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var headerView: UIView!
+    @IBOutlet weak var headerTitleBackgroundView: UIView!
     @IBOutlet weak var cityLabel: UILabel!
     @IBOutlet weak var weatherLabel: UILabel!
     @IBOutlet weak var tempLabel: UILabel!
@@ -24,7 +25,9 @@ class WeatherViewController: UIViewController {
     
     private var weekdayFormatter: NSDateFormatter!
     private var timeFormatter: NSDateFormatter!
-    
+    private var headerViewTopConstraintOriginalValue: CGFloat!
+    private var distanceToFullPercent: CGFloat = 0
+
     private var weatherInfoTitles: [WeatherInfoType] = [.Sunrise, .Sunset, .Clouds, .Rain, .Humidity, .Pressure]
     
     // MARK: - Object lifecycle
@@ -46,19 +49,15 @@ class WeatherViewController: UIViewController {
         timeFormatter.timeStyle = .ShortStyle
     }
     
-    
     // MARK: - View Controller lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         title = NSLocalizedString("Weather", comment: "WeatherTitle")
+        headerViewTopConstraintOriginalValue = headerViewTopConstraint.constant
         
         tableView.registerNib(UINib(nibName: "ForecastCell", bundle: nil), forCellReuseIdentifier: CellIdForecastCell)
         tableView.tableFooterView = weatherInforView
-        
-        var contentInset = tableView.contentInset
-        contentInset.top += headerView.bounds.size.height
-        tableView.contentInset = contentInset
         
         self.updateUI()
         
@@ -67,6 +66,20 @@ class WeatherViewController: UIViewController {
                 self.updateUI()
             }
         }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        var contentInset = tableView.contentInset
+        contentInset.top = headerView.frame.maxY
+        contentInset.bottom = 12 // extra margin
+        tableView.contentInset = contentInset
+        
+        tableView.contentOffset = CGPoint(x: 0, y: -contentInset.top)
+        
+        let backgroundViewFrame = view.convertRect(headerTitleBackgroundView.frame, fromView:headerTitleBackgroundView.superview)
+        distanceToFullPercent = tableView.contentInset.top - backgroundViewFrame.maxY
     }
     
     // MARK: - Business
@@ -79,7 +92,7 @@ class WeatherViewController: UIViewController {
         
         if let currentWeather = shared.api.city.currentWeather  {
             tempLabel.text = currentWeather.stringValueForWeatherInfoType(.Temperature)
-            weatherLabel.text = currentWeather.stringValueForWeatherInfoType(.Summary)
+            weatherLabel.text = currentWeather.stringValueForWeatherInfoType(.Summary).capitalizedString
         } else {
             tempLabel.text = "--°"
             weatherLabel.text = ""
@@ -91,7 +104,7 @@ class WeatherViewController: UIViewController {
         for i in 0..<weatherInfoTitles.count {
             let type = weatherInfoTitles[i]
             let label = weatherInforView.titleLabelAtIndex(i)
-            label.text = CurrentWeather.descriptionForWeatherInfoType(type)
+            label.text = CurrentWeather.descriptionForWeatherInfoType(type) + ":"
         }
         
         if let currentWeather = shared.api.city.currentWeather {
@@ -130,5 +143,18 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
         return nil
+    }
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        
+        let backgroundViewFrame = view.convertRect(headerTitleBackgroundView.frame, fromView:headerTitleBackgroundView.superview)
+        let distanceToFullPercent = scrollView.contentInset.top - backgroundViewFrame.maxY
+        var scrollPercent = (scrollView.contentOffset.y + scrollView.contentInset.top) / distanceToFullPercent
+        if scrollPercent > 1 { scrollPercent = 1 }
+        
+        headerViewTopConstraint.constant = round((1 - scrollPercent) * headerViewTopConstraintOriginalValue)
+        
+        // alpha goes from 1 to 0 on 70% of total distance
+        tempLabel.alpha = 1 - scrollPercent / 0.7
     }
 }

@@ -18,6 +18,8 @@ private let WeatherAPIForecastDayCount = 8
 private let WeatherAPIHost = "api.openweathermap.org"
 private let WeatherAPIPath = "/data/2.5"
 
+private var KVOQueueOperationCountContext = 0
+
 enum WeatherAPIMethod: String {
     case Current = "weather"
     case Forecast = "forecast/daily"
@@ -57,6 +59,20 @@ class WeatherAPI: NSObject {
         Alamofire.Manager.sharedInstance.startRequestsImmediately = false
         queue.maxConcurrentOperationCount = 1
         _readCity()
+        queue.addObserver(self, forKeyPath: "operationCount", options: [], context: &KVOQueueOperationCountContext)
+    }
+    
+    deinit {
+        queue.removeObserver(self, forKeyPath: "operationCount")
+    }
+    
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        if context == &KVOQueueOperationCountContext {
+            let app = UIApplication.sharedApplication()
+            let newValue = 
+        } else {
+            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+        }
     }
     
     func updateWeather(completion: (ErrorType?) -> ()) {
