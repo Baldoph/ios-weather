@@ -156,12 +156,17 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCellWithIdentifier(CellIdForecastCell) as! ForecastCell
-            let forecast = shared.api.city.daysForecasts![indexPath.row]
-            cell.dayLabel.text = weekdayFormatter.stringFromDate(forecast.date)
-            cell.maxTempLabel.text = "\(Int(round(forecast.temperatureMax.floatValue)))"
-            cell.minTempLabel.text = "\(Int(round(forecast.temperatureMin.floatValue)))"
-            return cell
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdForecastCell) as! ForecastCell
+        let forecast = shared.api.city.daysForecasts![indexPath.row]
+        cell.dayLabel.text = weekdayFormatter.stringFromDate(forecast.date)
+        cell.maxTempLabel.text = "\(Int(round(forecast.temperatureMax.floatValue)))"
+        cell.minTempLabel.text = "\(Int(round(forecast.temperatureMin.floatValue)))"
+        if indexPath.row == 0 {
+            cell.today = true
+        } else {
+            cell.today = false
+        }
+        return cell
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
