@@ -144,6 +144,18 @@ class WeatherViewController: UIViewController {
             weatherInfoView.clearAllValues()
         }
     }
+    
+    /// Scroll to a position where the header is not halfway to top or bottom position
+    func scrollToKnownPosition() {
+        guard distanceToFullPercent != nil else { return }
+        
+        let progress = (tableView.contentOffset.y + tableView.contentInset.top) / distanceToFullPercent
+        if progress < 0.5 {
+            tableView.setContentOffset(CGPoint(x: 0, y: -tableView.contentInset.top), animated: true)
+        } else if progress < 1.0 {
+            tableView.setContentOffset(CGPoint(x: 0, y: -headerTitleBackgroundView.height - topLayoutGuide.length), animated: true)
+        }
+    }
 }
 
 // MARK: - Table View protocols
@@ -184,9 +196,20 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource {
         var progress = (scrollView.contentOffset.y + scrollView.contentInset.top) / distanceToFullPercent
         if progress > 1 { progress = 1 }
         
+        // Move header to top or bottom position proportionally to progress
         headerViewTopConstraint.constant = roundScreen((1 - progress) * headerViewTopConstraintOriginalValue)
         
         // Alpha goes from 1 to 0 when progress goes from 0 to 70%
         tempLabel.alpha = 1 - progress / 0.7
+    }
+    
+    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            scrollToKnownPosition()
+        }
+    }
+    
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        scrollToKnownPosition()
     }
 }
