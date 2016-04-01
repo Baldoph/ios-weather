@@ -72,7 +72,7 @@ class WeatherViewController: UIViewController {
         self.updateUI()
         refreshData()
         
-        // Compute progress between top and bottom positions of header view
+        // Compute progress between bottom (table view is scrolled up) and top (is scrolled down) positions of header view
         let scrollProgress = tableView.rx_contentOffset.asDriver().map { (offset) -> CGFloat in
             guard let distanceToFullPercent = self.distanceToFullPercent else {
                 return 0
@@ -216,6 +216,8 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        scrollToKnownPosition()
+        if !scrollView.tracking {
+            scrollToKnownPosition()
+        }
     }
 }
