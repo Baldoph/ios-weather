@@ -115,31 +115,31 @@
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
-                                <exclude reference="MKf-zN-qnN"/>
-                                <exclude reference="uJf-Wh-01H"/>
                                 <exclude reference="5Di-jx-r0L"/>
                                 <exclude reference="A7H-ZQ-vgO"/>
                                 <exclude reference="Gxf-E2-QZa"/>
                                 <exclude reference="naB-Bd-eYz"/>
+                                <exclude reference="MKf-zN-qnN"/>
+                                <exclude reference="uJf-Wh-01H"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=compact">
                             <mask key="constraints">
-                                <include reference="MKf-zN-qnN"/>
-                                <exclude reference="zfJ-B9-h2a"/>
                                 <include reference="Gxf-E2-QZa"/>
                                 <exclude reference="VED-bG-chO"/>
+                                <include reference="MKf-zN-qnN"/>
+                                <exclude reference="zfJ-B9-h2a"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=regular">
                             <mask key="constraints">
-                                <exclude reference="73M-Z5-HA6"/>
-                                <include reference="uJf-Wh-01H"/>
-                                <exclude reference="zfJ-B9-h2a"/>
                                 <include reference="A7H-ZQ-vgO"/>
                                 <exclude reference="DEI-aU-dx1"/>
                                 <exclude reference="VED-bG-chO"/>
                                 <include reference="naB-Bd-eYz"/>
+                                <exclude reference="73M-Z5-HA6"/>
+                                <include reference="uJf-Wh-01H"/>
+                                <exclude reference="zfJ-B9-h2a"/>
                             </mask>
                         </variation>
                     </view>

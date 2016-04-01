@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import RxCocoa
+import RxSwift
 
 private let CellIdForecastCell = "CellIdForecastCell"
 
@@ -25,8 +27,10 @@ class WeatherViewController: UIViewController {
     private var timeFormatter: NSDateFormatter!
     private var headerViewTopConstraintOriginalValue: CGFloat!
     /// The space between the top table view cell and the bottom of `backgroundViewFrame`
-    private var distanceToFullPercent: CGFloat!
+    private var distanceToFullPercent: CGFloat?
     private var weatherInfoTitles: [WeatherInfoType] = [.Sunrise, .Sunset, .Clouds, .Rain, .Humidity, .Pressure]
+    
+    let disposeBag = DisposeBag()
     
     // MARK: - Object lifecycle
     
@@ -67,6 +71,22 @@ class WeatherViewController: UIViewController {
         
         self.updateUI()
         refreshData()
+        
+        // Compute progress between top and bottom positions of header view
+        let scrollProgress = tableView.rx_contentOffset.asDriver().map { (offset) -> CGFloat in
+            guard let distanceToFullPercent = self.distanceToFullPercent else {
+                return 0
+            }
+            var progress = (offset.y + self.tableView.contentInset.top) / distanceToFullPercent
+            if progress > 1 { progress = 1 }
+            return progress
+        }
+        
+        // Move header to top or bottom position proportionally to progress
+        scrollProgress.map { roundScreen((1 - $0) * self.headerViewTopConstraintOriginalValue) }.drive(self.headerViewTopConstraint.rx_constant).addDisposableTo(disposeBag)
+        
+        // Alpha of temperature label goes from 1 to 0 when progress goes from 0 to 70%
+        scrollProgress.map { 1 - $0 / 0.7 }.drive( self.tempLabel.rx_alpha ).addDisposableTo(disposeBag)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -147,7 +167,7 @@ class WeatherViewController: UIViewController {
     
     /// Scroll to a position where the header is not halfway to top or bottom position
     func scrollToKnownPosition() {
-        guard distanceToFullPercent != nil else { return }
+        guard let distanceToFullPercent = distanceToFullPercent else { return }
         
         let progress = (tableView.contentOffset.y + tableView.contentInset.top) / distanceToFullPercent
         if progress < 0.5 {
@@ -187,20 +207,6 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
         return nil
-    }
-    
-    func scrollViewDidScroll(scrollView: UIScrollView) {
-        
-        guard distanceToFullPercent != nil else { return }
-        
-        var progress = (scrollView.contentOffset.y + scrollView.contentInset.top) / distanceToFullPercent
-        if progress > 1 { progress = 1 }
-        
-        // Move header to top or bottom position proportionally to progress
-        headerViewTopConstraint.constant = roundScreen((1 - progress) * headerViewTopConstraintOriginalValue)
-        
-        // Alpha goes from 1 to 0 when progress goes from 0 to 70%
-        tempLabel.alpha = 1 - progress / 0.7
     }
     
     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
