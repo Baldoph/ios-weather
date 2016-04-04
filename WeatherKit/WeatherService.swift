@@ -12,5 +12,6 @@ import Argo
 
 public protocol WeatherService {
 
-    //func requestForQuery(query: String) -> Observable<ForecastResponse>
+    func requestForcastForCity(query: String) -> Observable<ForecastResponse>
+    func requestCurrentForCity(query: String) -> Observable<CurrentWeatherResponse>
 }

@@ -7,11 +7,17 @@
 //
 
 import Foundation
+import Argo
+import Curry
 
-struct City {
-    var name: String = "Lyon"
-    var cityID: String = "6454573"
-    var currentWeather: CurrentWeather!
-    var forecasts: [DayForecast]!
+public struct City {
+    public let name: String
+    public let cityID: String
+}
+
+extension City: Decodable {
+    public static func decode(j: JSON) -> Decoded<City> {
+        return curry(City.init) <^> j <| "name" <*> j <| "name"
+    }
 }
 
