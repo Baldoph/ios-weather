@@ -89,6 +89,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-weather/Curry.framework"
   install_framework "Pods-weather/RxCocoa.framework"
   install_framework "Pods-weather/RxSwift.framework"
+  install_framework "Pods-weather/SwiftDate.framework"
   install_framework "Pods-weather/Swinject.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
@@ -97,5 +98,6 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-weather/Curry.framework"
   install_framework "Pods-weather/RxCocoa.framework"
   install_framework "Pods-weather/RxSwift.framework"
+  install_framework "Pods-weather/SwiftDate.framework"
   install_framework "Pods-weather/Swinject.framework"
 fi

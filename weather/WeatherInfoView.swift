@@ -7,8 +7,21 @@
 //
 
 import UIKit
+import WeatherKit
 
 class WeatherInfoView: UIView {
+    
+    private var dateFormatter: NSDateFormatter = {
+        var df = NSDateFormatter()
+        df.timeStyle = .ShortStyle
+        return df
+    }()
+    
+    var currentWeather: CurrentWeather! {
+        didSet {
+            
+        }
+    }
     
     @IBOutlet var titleLabels: [UILabel]!
     @IBOutlet var valueLabels: [UILabel]!

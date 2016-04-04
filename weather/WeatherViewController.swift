@@ -9,11 +9,12 @@
 import UIKit
 import RxCocoa
 import RxSwift
+import WeatherKit
 
 private let CellIdForecastCell = "CellIdForecastCell"
 
-class WeatherViewController: UIViewController {
-
+class WeatherViewController: UIViewController, BindableViewModel {
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var headerViewTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var headerView: UIView!
@@ -23,43 +24,17 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var tempLabel: UILabel!
     @IBOutlet var weatherInfoView: WeatherInfoView!
     
-    private var weekdayFormatter: NSDateFormatter!
-    private var timeFormatter: NSDateFormatter!
     private var headerViewTopConstraintOriginalValue: CGFloat!
     /// The space between the top table view cell and the bottom of `backgroundViewFrame`
     private var distanceToFullPercent: CGFloat?
-    private var weatherInfoTitles: [WeatherInfoType] = [.Sunrise, .Sunset, .Clouds, .Rain, .Humidity, .Pressure]
     
     let disposeBag = DisposeBag()
-    
-    // MARK: - Object lifecycle
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        commonInit()
-    }
-    
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        commonInit()
-    }
-    
-    func commonInit() {
-        weekdayFormatter = NSDateFormatter()
-        weekdayFormatter.dateFormat = "EEEE"
-        timeFormatter = NSDateFormatter()
-        timeFormatter.timeStyle = .ShortStyle
-        // Refresh data when app enters foreground
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(WeatherViewController.refreshData), name: UIApplicationWillEnterForegroundNotification, object: nil)
-    }
-    
-    deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
-    }
     
     // MARK: - View Controller lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        bindViewModel()
         
         // Set title
         title = NSLocalizedString("Weather", comment: "WeatherTitle")
@@ -68,9 +43,6 @@ class WeatherViewController: UIViewController {
         headerViewTopConstraintOriginalValue = headerViewTopConstraint.constant
         
         tableView.registerNib(UINib(nibName: "ForecastCell", bundle: nil), forCellReuseIdentifier: CellIdForecastCell)
-        
-        self.updateUI()
-        refreshData()
         
         setUpHeaderAnimation()
     }
@@ -109,13 +81,20 @@ class WeatherViewController: UIViewController {
     
     // MARK: - Business
     
-    func refreshData() {
-        shared.api.updateWeather { (error) in
-            if error == nil {
-                self.updateUI()
-            }
-        }
-    }
+    func bindViewModel(viewModel: WeatherViewModel) {
+        
+        // Listen to view model `cityName` and bind it to the city label
+        viewModel.cityName.asObservable().bindTo(cityLabel.rx_text).addDisposableTo(disposeBag)
+        
+        // Listen to view model `forecasts` items and bind it directly to the table view
+        viewModel.forecasts.asObservable().bindTo(tableView.rx_itemsWithCellIdentifier("ForecastCell", cellType: ForecastCell.self)) { (row, element, cell) in
+            //cell.weather = element
+            }.addDisposableTo(disposeBag)
+        
+        // // Listen to view model `currentWeather` and bind it to the city label
+        viewModel.currentWeather.asObservable().map { (weather) -> String in
+            return ""
+        }.bindTo(tempLabel.rx_text)
     
     func updateUI() {
         tableView.reloadData()

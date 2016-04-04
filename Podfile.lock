@@ -5,6 +5,7 @@ PODS:
   - RxCocoa (2.3.1):
     - RxSwift (~> 2.3.1)
   - RxSwift (2.3.1)
+  - SwiftDate (3.0.8)
   - Swinject (1.1.1)
 
 DEPENDENCIES:
@@ -13,6 +14,7 @@ DEPENDENCIES:
   - Curry
   - RxCocoa
   - RxSwift
+  - SwiftDate
   - Swinject
 
 SPEC CHECKSUMS:
@@ -21,6 +23,7 @@ SPEC CHECKSUMS:
   Curry: 294533187eedbf52db60a1e70c29b4f5c9f621c0
   RxCocoa: a2baaf3462b989559a51dce59d78fbebb8fe0afa
   RxSwift: 829b2843e9eddc77a02cb3f5117f0d55f8f646f1
+  SwiftDate: 971f8b9394f664f2226b9c3ab64e801a7291c612
   Swinject: 8c1b46e49c604f8c5c1f45f92ef314d3736bbef4
 
 COCOAPODS: 0.39.0

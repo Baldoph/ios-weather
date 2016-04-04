@@ -8,13 +8,15 @@
 
 import Foundation
 
-class WeatherClient: Client {
+public class WeatherClient: Client {
     
-    var baseURL: String {
+    public init() {}
+    
+    public var baseURL: String {
         return "http://api.openweathermap.org/data/2.5"
     }
     
-    var baseParameters: [String : AnyObject]? {
+    public var baseParameters: [String : AnyObject]? {
         return ["appid" : "acf4afa1abdb42982de642934f090ad5",
         "units": "metric",
         "lang": NSLocalizedString("lang", comment: "")]

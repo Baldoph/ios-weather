@@ -9,6 +9,7 @@ pod 'Alamofire'
 pod 'Argo'
 pod 'Curry'
 pod 'Swinject'
+pod "SwiftDate"
 
 end
 

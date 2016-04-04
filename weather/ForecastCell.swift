@@ -7,12 +7,29 @@
 //
 
 import UIKit
+import WeatherKit
+import SwiftDate
+
+private let weekdayFormatter: NSDateFormatter = {
+    var df = NSDateFormatter()
+    df.dateFormat = "EEEE"
+    return df
+}()
 
 class ForecastCell: UITableViewCell {
 
     @IBOutlet weak var maxTempLabel: UILabel!
     @IBOutlet weak var minTempLabel: UILabel!
     @IBOutlet weak var dayLabel: UILabel!
+    
+    var forecast: DayForecast! {
+        didSet {
+            dayLabel.text = weekdayFormatter.stringFromDate(forecast.date)
+            maxTempLabel.text = "\(Int(round(forecast.temperatureMax)))"
+            minTempLabel.text = "\(Int(round(forecast.temperatureMin)))"
+            today = forecast.date.isInToday()
+        }
+    }
     
     private var allLabels: [UILabel] {
         return [maxTempLabel, minTempLabel, dayLabel]
