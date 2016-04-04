@@ -19,6 +19,10 @@
 		9359CE0C1CABCBB0001A6A69 /* WeatherInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9359CE0B1CABCBB0001A6A69 /* WeatherInfoView.swift */; };
 		935C1F011CAC242500B84585 /* UIView+Layout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935C1F001CAC242500B84585 /* UIView+Layout.swift */; };
 		935C1F071CAC2A3900B84585 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 935C1F051CAC2A3900B84585 /* Localizable.strings */; };
+		9362D9771CAED0AA0065AD94 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9362D9761CAED0AA0065AD94 /* City.swift */; };
+		936AFA631CB2592D0043B2CE /* CurrentWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936AFA621CB2592D0043B2CE /* CurrentWeather.swift */; };
+		936AFA651CB2593D0043B2CE /* DayForecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936AFA641CB2593D0043B2CE /* DayForecast.swift */; };
+		936AFA681CB25CBE0043B2CE /* Argo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936AFA671CB25CBE0043B2CE /* Argo.swift */; };
 		9389311D1CAAAAA700D2EC51 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938931181CAAAAA700D2EC51 /* City.swift */; };
 		9389311E1CAAAAA700D2EC51 /* CurrentWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938931191CAAAAA700D2EC51 /* CurrentWeather.swift */; };
 		9389311F1CAAAAA700D2EC51 /* DayForecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9389311A1CAAAAA700D2EC51 /* DayForecast.swift */; };
@@ -102,6 +106,10 @@
 		935C1F041CAC2A2400B84585 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		935C1F061CAC2A3900B84585 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		935C1F081CAC2A4000B84585 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		9362D9761CAED0AA0065AD94 /* City.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
+		936AFA621CB2592D0043B2CE /* CurrentWeather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentWeather.swift; sourceTree = "<group>"; };
+		936AFA641CB2593D0043B2CE /* DayForecast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayForecast.swift; sourceTree = "<group>"; };
+		936AFA671CB25CBE0043B2CE /* Argo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Argo.swift; sourceTree = "<group>"; };
 		938931181CAAAAA700D2EC51 /* City.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		938931191CAAAAA700D2EC51 /* CurrentWeather.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentWeather.swift; sourceTree = "<group>"; };
 		9389311A1CAAAAA700D2EC51 /* DayForecast.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DayForecast.swift; sourceTree = "<group>"; };
@@ -257,6 +265,24 @@
 			name = Tools;
 			sourceTree = "<group>";
 		};
+		9362D9751CAED0850065AD94 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				9362D9761CAED0AA0065AD94 /* City.swift */,
+				936AFA621CB2592D0043B2CE /* CurrentWeather.swift */,
+				936AFA641CB2593D0043B2CE /* DayForecast.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		936AFA661CB25CA40043B2CE /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				936AFA671CB25CBE0043B2CE /* Argo.swift */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
 		938931221CAAAAAB00D2EC51 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -283,6 +309,8 @@
 		93C2F7B31CAEB8610015A2A9 /* WeatherKit */ = {
 			isa = PBXGroup;
 			children = (
+				936AFA661CB25CA40043B2CE /* Helpers */,
+				9362D9751CAED0850065AD94 /* Models */,
 				93C2F7B41CAEB8610015A2A9 /* WeatherKit.h */,
 				93C2F7B61CAEB8610015A2A9 /* Info.plist */,
 			);
@@ -597,6 +625,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				936AFA631CB2592D0043B2CE /* CurrentWeather.swift in Sources */,
+				9362D9771CAED0AA0065AD94 /* City.swift in Sources */,
+				936AFA681CB25CBE0043B2CE /* Argo.swift in Sources */,
+				936AFA651CB2593D0043B2CE /* DayForecast.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -764,6 +796,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = weather/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -778,6 +811,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = weather/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -814,6 +848,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7A2705652B65B261FA65C477 /* Pods-WeatherKit.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -826,6 +861,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.worldline.WeatherKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -835,6 +871,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2B6D479494E61C7E2E56ED3A /* Pods-WeatherKit.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;

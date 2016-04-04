@@ -72,21 +72,7 @@ class WeatherViewController: UIViewController {
         self.updateUI()
         refreshData()
         
-        // Compute progress between bottom (table view is scrolled up) and top (is scrolled down) positions of header view
-        let scrollProgress = tableView.rx_contentOffset.asDriver().map { (offset) -> CGFloat in
-            guard let distanceToFullPercent = self.distanceToFullPercent else {
-                return 0
-            }
-            var progress = (offset.y + self.tableView.contentInset.top) / distanceToFullPercent
-            if progress > 1 { progress = 1 }
-            return progress
-        }
-        
-        // Move header to top or bottom position proportionally to progress
-        scrollProgress.map { roundScreen((1 - $0) * self.headerViewTopConstraintOriginalValue) }.drive(self.headerViewTopConstraint.rx_constant).addDisposableTo(disposeBag)
-        
-        // Alpha of temperature label goes from 1 to 0 when progress goes from 0 to 70%
-        scrollProgress.map { 1 - $0 / 0.7 }.drive( self.tempLabel.rx_alpha ).addDisposableTo(disposeBag)
+        setUpHeaderAnimation()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -219,5 +205,25 @@ extension WeatherViewController: UITableViewDelegate, UITableViewDataSource {
         if !scrollView.tracking {
             scrollToKnownPosition()
         }
+    }
+}
+
+extension WeatherViewController {
+    private func setUpHeaderAnimation() {
+        // Compute progress between bottom (table view is scrolled up) and top (is scrolled down) positions of header view
+        let scrollProgress = tableView.rx_contentOffset.asDriver().map { (offset) -> CGFloat in
+            guard let distanceToFullPercent = self.distanceToFullPercent else {
+                return 0
+            }
+            var progress = (offset.y + self.tableView.contentInset.top) / distanceToFullPercent
+            if progress > 1 { progress = 1 }
+            return progress
+        }
+        
+        // Move header to top or bottom position proportionally to progress
+        scrollProgress.map { roundScreen((1 - $0) * self.headerViewTopConstraintOriginalValue) }.drive(self.headerViewTopConstraint.rx_constant).addDisposableTo(disposeBag)
+        
+        // Alpha of temperature label goes from 1 to 0 when progress goes from 0 to 70%
+        scrollProgress.map { 1 - $0 / 0.7 }.drive( self.tempLabel.rx_alpha ).addDisposableTo(disposeBag)
     }
 }
