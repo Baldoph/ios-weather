@@ -7,10 +7,13 @@
 //
 
 import Foundation
+import ReachabilitySwift
 
 public class WeatherClient: Client {
     
     public init() {}
+    
+    public var reachability: Reachability? = try? Reachability.reachabilityForInternetConnection()
     
     public var baseURL: String {
         return "http://api.openweathermap.org/data/2.5"

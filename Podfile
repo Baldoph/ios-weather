@@ -11,6 +11,7 @@ pod 'Curry'
 pod 'Swinject'
 pod "SwiftDate"
 pod 'AlamofireNetworkActivityIndicator'
+pod 'ReachabilitySwift'
 
 end
 

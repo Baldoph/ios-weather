@@ -31,7 +31,13 @@ struct WeatherViewModel {
             }.addDisposableTo(disposeBag)
     }
     
+    /// We make two requests, one after the other to retrieve 1) Current weather and 2) Forecast on 8 days
     func updateWeatherForCityName(name: String) {
+        
+        let errorClosure = {
+            self.setBlankValues()
+        }
+    
         service.requestCurrentForCity(name).subscribe { (event) in
             
             if let weatherResponse = event.element {
@@ -46,14 +52,14 @@ struct WeatherViewModel {
                         
                     } else { // error
                         
-                        self.setBlankValues()
+                        errorClosure()
                         
                     }
                 }).addDisposableTo(self.disposeBag)
                 
             } else { // error
                 
-                self.setBlankValues()
+                errorClosure()
             }
             
         }.addDisposableTo(disposeBag)
@@ -76,6 +82,13 @@ struct WeatherViewModel {
     func handleResponseForcast(forecastResponse: ForecastResponse) {
         self.forecasts.value = forecastResponse.forecats
         self.cityName.value = forecastResponse.city.name
+    }
+}
+
+extension WeatherViewModel {
+    
+    func didBind() {
+        updateWeatherForCityName("Lyon")
     }
 }
 

@@ -4,6 +4,7 @@ PODS:
     - Alamofire (~> 3.3)
   - Argo (2.3.0)
   - Curry (1.4.0)
+  - ReachabilitySwift (2.3.3)
   - RxCocoa (2.3.1):
     - RxSwift (~> 2.3.1)
   - RxSwift (2.3.1)
@@ -15,6 +16,7 @@ DEPENDENCIES:
   - AlamofireNetworkActivityIndicator
   - Argo
   - Curry
+  - ReachabilitySwift
   - RxCocoa
   - RxSwift
   - SwiftDate
@@ -25,6 +27,7 @@ SPEC CHECKSUMS:
   AlamofireNetworkActivityIndicator: 49a6e39afb947136f7b1872bae2d684957c26697
   Argo: 3dbecf4204b1a3cdd1df88ebd5e23d01b652d34b
   Curry: 294533187eedbf52db60a1e70c29b4f5c9f621c0
+  ReachabilitySwift: e0f6b6f280effb47731acfaaa2d5ffe223703793
   RxCocoa: a2baaf3462b989559a51dce59d78fbebb8fe0afa
   RxSwift: 829b2843e9eddc77a02cb3f5117f0d55f8f646f1
   SwiftDate: 971f8b9394f664f2226b9c3ab64e801a7291c612

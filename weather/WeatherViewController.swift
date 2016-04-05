@@ -90,7 +90,7 @@ class WeatherViewController: UIViewController, BindableViewModel {
         viewModel.currentWeatherDescription.asObservable().bindTo(weatherLabel.rx_text).addDisposableTo(disposeBag)
         viewModel.currentWeather.asObservable().bindTo(weatherInfoView.rx_currentWeather).addDisposableTo(disposeBag)
         
-        viewModel.updateWeatherForCityName("Lyon")
+        viewModel.didBind()
     }
     
     /// Scroll to a position where the header is not halfway to top or bottom position

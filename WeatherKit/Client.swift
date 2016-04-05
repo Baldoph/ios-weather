@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import ReachabilitySwift
 
 public protocol Client {
 
@@ -16,6 +17,8 @@ public protocol Client {
     var baseParameters: [String: AnyObject]? { get }
 
     func requestJSON(method: Alamofire.Method, url: String, parameters: [String : AnyObject]?, headers: [String : String]?, completionHandler: Alamofire.Response<AnyObject, NSError> -> Void)
+    
+    var reachability: Reachability? { get }
 }
 
 extension Client {
@@ -30,7 +33,14 @@ extension Client {
 
     public func requestJSON(method: Alamofire.Method, url: String, parameters: [String : AnyObject]?, headers: [String : String]?, completionHandler: Alamofire.Response<AnyObject, NSError> -> Void) {
 
-        Alamofire.request(method, url, parameters: parameters, headers: headers).responseJSON(completionHandler: { (response) -> Void in
+        let request = Alamofire.request(method, url, parameters: parameters, headers: headers)
+        let urlRequest = request.request!.mutableCopy() as! NSMutableURLRequest
+
+        if let r = reachability where !r.isReachable() { // we use cache
+            urlRequest.cachePolicy = .ReturnCacheDataElseLoad
+        }
+        
+        Alamofire.request(urlRequest).responseJSON(completionHandler: { (response) -> Void in
             completionHandler(response)
         })
     }
