@@ -1,5 +1,7 @@
 PODS:
   - Alamofire (3.3.0)
+  - AlamofireNetworkActivityIndicator (1.0.1):
+    - Alamofire (~> 3.3)
   - Argo (2.3.0)
   - Curry (1.4.0)
   - RxCocoa (2.3.1):
@@ -10,6 +12,7 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire
+  - AlamofireNetworkActivityIndicator
   - Argo
   - Curry
   - RxCocoa
@@ -19,6 +22,7 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   Alamofire: 9054db4a1b1ca9e363223183e01cea380159a27c
+  AlamofireNetworkActivityIndicator: 49a6e39afb947136f7b1872bae2d684957c26697
   Argo: 3dbecf4204b1a3cdd1df88ebd5e23d01b652d34b
   Curry: 294533187eedbf52db60a1e70c29b4f5c9f621c0
   RxCocoa: a2baaf3462b989559a51dce59d78fbebb8fe0afa

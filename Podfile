@@ -10,6 +10,7 @@ pod 'Argo'
 pod 'Curry'
 pod 'Swinject'
 pod "SwiftDate"
+pod 'AlamofireNetworkActivityIndicator'
 
 end
 

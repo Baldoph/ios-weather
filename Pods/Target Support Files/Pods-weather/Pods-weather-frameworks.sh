@@ -85,6 +85,7 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-weather/Alamofire.framework"
+  install_framework "Pods-weather/AlamofireNetworkActivityIndicator.framework"
   install_framework "Pods-weather/Argo.framework"
   install_framework "Pods-weather/Curry.framework"
   install_framework "Pods-weather/RxCocoa.framework"
@@ -94,6 +95,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-weather/Alamofire.framework"
+  install_framework "Pods-weather/AlamofireNetworkActivityIndicator.framework"
   install_framework "Pods-weather/Argo.framework"
   install_framework "Pods-weather/Curry.framework"
   install_framework "Pods-weather/RxCocoa.framework"
