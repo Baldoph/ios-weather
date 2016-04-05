@@ -82,52 +82,15 @@ class WeatherViewController: UIViewController, BindableViewModel {
     // MARK: - Business
     
     func bindViewModel(viewModel: WeatherViewModel) {
-        
-        // Listen to view model `cityName` and bind it to the city label
         viewModel.cityName.asObservable().bindTo(cityLabel.rx_text).addDisposableTo(disposeBag)
-        
-        // Listen to view model `forecasts` items and bind it directly to the table view
-        viewModel.forecasts.asObservable().bindTo(tableView.rx_itemsWithCellIdentifier("ForecastCell", cellType: ForecastCell.self)) { (row, element, cell) in
-            //cell.weather = element
+        viewModel.forecasts.asObservable().bindTo(tableView.rx_itemsWithCellIdentifier(CellIdForecastCell, cellType: ForecastCell.self)) { (row, element, cell) in
+                cell.forecast = element
             }.addDisposableTo(disposeBag)
+        viewModel.currentTemperatureDescription.asObservable().bindTo(tempLabel.rx_text).addDisposableTo(disposeBag)
+        viewModel.currentWeatherDescription.asObservable().bindTo(weatherLabel.rx_text).addDisposableTo(disposeBag)
+        viewModel.currentWeather.asObservable().bindTo(weatherInfoView.rx_currentWeather).addDisposableTo(disposeBag)
         
-        // // Listen to view model `currentWeather` and bind it to the city label
-        viewModel.currentWeather.asObservable().map { (weather) -> String in
-            return ""
-        }.bindTo(tempLabel.rx_text)
-    
-    func updateUI() {
-        tableView.reloadData()
-        updateWeatherInfoView()
-        
-        cityLabel.text = shared.api.city.name
-        
-        if let currentWeather = shared.api.city.currentWeather  {
-            tempLabel.text = currentWeather.stringValueForWeatherInfoType(.Temperature)
-            weatherLabel.text = currentWeather.stringValueForWeatherInfoType(.Summary).capitalizedString
-        } else {
-            tempLabel.text = "--°"
-            weatherLabel.text = ""
-        }
-    }
-    
-    func updateWeatherInfoView() {
-        
-        for i in 0..<weatherInfoTitles.count {
-            let type = weatherInfoTitles[i]
-            let label = weatherInfoView.titleLabelAtIndex(i)
-            label.text = CurrentWeather.descriptionForWeatherInfoType(type) + ":"
-        }
-        
-        if let currentWeather = shared.api.city.currentWeather {
-            for i in 0..<weatherInfoTitles.count {
-                let type = weatherInfoTitles[i]
-                let label = weatherInfoView.valueLabelAtIndex(i)
-                label.text = currentWeather.stringValueForWeatherInfoType(type)
-            }
-        } else {
-            weatherInfoView.clearAllValues()
-        }
+        viewModel.updateWeatherForCityName("Lyon")
     }
     
     /// Scroll to a position where the header is not halfway to top or bottom position
@@ -144,35 +107,7 @@ class WeatherViewController: UIViewController, BindableViewModel {
 }
 
 // MARK: - Table View protocols
-extension WeatherViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let daysForecasts = shared.api.city.daysForecasts {
-            return daysForecasts.count
-        }
-        return 0
-    }
-    
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdForecastCell) as! ForecastCell
-        let forecast = shared.api.city.daysForecasts![indexPath.row]
-        cell.dayLabel.text = weekdayFormatter.stringFromDate(forecast.date)
-        cell.maxTempLabel.text = "\(Int(round(forecast.temperatureMax.floatValue)))"
-        cell.minTempLabel.text = "\(Int(round(forecast.temperatureMin.floatValue)))"
-        if indexPath.row == 0 {
-            cell.today = true
-        } else {
-            cell.today = false
-        }
-        return cell
-    }
-    
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 44
-    }
-    
-    func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
-        return nil
-    }
+extension WeatherViewController: UITableViewDelegate {
     
     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
         if !decelerate {

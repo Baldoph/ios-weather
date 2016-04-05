@@ -14,5 +14,4 @@ public protocol WeatherService {
 
     func requestForcastForCity(query: String) -> Observable<ForecastResponse>
     func requestCurrentForCity(query: String) -> Observable<CurrentWeatherResponse>
-    func updateWeatherForCity(query: String) -> Observable<(CurrentWeatherResponse, ForecastResponse)>
 }

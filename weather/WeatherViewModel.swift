@@ -17,7 +17,10 @@ struct WeatherViewModel {
     
     var cityName = Variable<String>("")
     var forecasts = Variable<[WeatherKit.DayForecast]>([])
+    
     var currentWeather = Variable<WeatherKit.CurrentWeather?>(nil)
+    var currentTemperatureDescription = Variable<String>("--°")
+    var currentWeatherDescription = Variable<String>("")
     
     init(service: WeatherService) {
         self.service = service
@@ -29,20 +32,55 @@ struct WeatherViewModel {
     }
     
     func updateWeatherForCityName(name: String) {
-        
-        service.updateWeatherForCity(name).subscribe { (event) -> Void in
+        service.requestCurrentForCity(name).subscribe { (event) in
             
-            if let (currentWeatherResponse, forecastResponse) = event.element {
-                self.forecasts.value = forecastResponse.forecats
-                self.cityName.value = forecastResponse.city.name
-                self.currentWeather.value = currentWeatherResponse.currentWeather
-            } else {
+            if let weatherResponse = event.element {
                 
+                self.handleResponseCurrentWeather(weatherResponse)
+                
+                self.service.requestForcastForCity(name).subscribe({ (event) in
+                    
+                    if let forecastResponse = event.element {
+                        
+                        self.handleResponseForcast(forecastResponse)
+                        
+                    } else { // error
+                        
+                        self.setBlankValues()
+                        
+                    }
+                }).addDisposableTo(self.disposeBag)
+                
+            } else { // error
+                
+                self.setBlankValues()
             }
+            
         }.addDisposableTo(disposeBag)
+    }
+    
+    func setBlankValues() {
+        self.forecasts.value = []
+        self.cityName.value = ""
+        self.currentWeather.value = nil
+        self.currentTemperatureDescription.value = "--°"
+        self.currentWeatherDescription.value = ""
+    }
+    
+    func handleResponseCurrentWeather(currentWeatherResponse: CurrentWeatherResponse) {
+        self.currentWeather.value = currentWeatherResponse.currentWeather
+        self.currentTemperatureDescription.value = currentWeatherResponse.currentWeather.temperature.toString() + "°"
+        self.currentWeatherDescription.value = currentWeatherResponse.currentWeather.weatherDescription[0].description.capitalizedString
+    }
+    
+    func handleResponseForcast(forecastResponse: ForecastResponse) {
+        self.forecasts.value = forecastResponse.forecats
+        self.cityName.value = forecastResponse.city.name
     }
 }
 
 extension WeatherViewModel {
-    
+    static func largeTemperaturePlacholder() -> String { return "--" }
+    static func temperaturePlacholder() -> String { return "-" }
+    static func copyPlacholder() -> String { return "-" }
 }

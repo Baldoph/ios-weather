@@ -8,8 +8,12 @@
 
 import UIKit
 import WeatherKit
+import RxSwift
+import RxCocoa
 
 class WeatherInfoView: UIView {
+    
+    private var weatherInfoTitles: [WeatherInfoType] = [.Sunrise, .Sunset, .Clouds, .Rain, .Humidity, .Pressure]
     
     private var dateFormatter: NSDateFormatter = {
         var df = NSDateFormatter()
@@ -17,10 +21,38 @@ class WeatherInfoView: UIView {
         return df
     }()
     
-    var currentWeather: CurrentWeather! {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        clearAllValues()
+    }
+    
+    var currentWeather: CurrentWeather? {
         didSet {
             
+            /* left labels: titles */
+            for i in 0..<weatherInfoTitles.count {
+                let type = weatherInfoTitles[i]
+                let label = titleLabelAtIndex(i)
+                label.text = CurrentWeather.descriptionForWeatherInfoType(type) + ":"
+            }
+            
+            if let currentWeather = currentWeather {
+                /* right labels : values */
+                    for i in 0..<weatherInfoTitles.count {
+                        let type = weatherInfoTitles[i]
+                        let label = valueLabelAtIndex(i)
+                        label.text = currentWeather.stringValueForWeatherInfoType(type)
+                    }
+            } else {
+                clearAllValues()
+            }
         }
+    }
+    
+    var rx_currentWeather: AnyObserver<CurrentWeather?> {
+        return UIBindingObserver(UIElement: self) { view, weather in
+            view.currentWeather = weather
+            }.asObserver()
     }
     
     @IBOutlet var titleLabels: [UILabel]!

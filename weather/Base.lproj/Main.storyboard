@@ -52,7 +52,6 @@
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <outlet property="dataSource" destination="Sd2-b1-Qcp" id="mqt-TX-CBN"/>
                                     <outlet property="delegate" destination="Sd2-b1-Qcp" id="pwS-lx-mgI"/>
                                 </connections>
                             </tableView>

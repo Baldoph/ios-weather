@@ -17,6 +17,7 @@ public protocol Networking {
     var disposeBag: DisposeBag { get }
 
     func request<T: Decodable where T == T.DecodedType>(method: Alamofire.Method, urlPath: String, parameters: [String : AnyObject]?) -> Observable<T>
+    
 }
 
 extension Networking {

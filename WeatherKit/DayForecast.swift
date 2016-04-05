@@ -11,16 +11,16 @@ import Curry
 import Argo
 
 public struct DayForecast {
-    public let temperatureMin: Float
-    public let temperatureMax: Float
+    public let temperatureMin: Temperature
+    public let temperatureMax: Temperature
     public let date: NSDate
 }
 
 extension DayForecast: Decodable {
     public static func decode(j: JSON) -> Decoded<DayForecast> {
         return curry(DayForecast.init)
-        <^> j <| ["temp", "min"]
-        <*> j <| ["temp", "max"]
-        <*> (j <| "date" >>- toNSDate)
+        <^> (j <| ["temp", "min"] >>- toTemperature)
+        <*> (j <| ["temp", "max"] >>- toTemperature)
+        <*> (j <| "dt" >>- toNSDate)
     }
 }

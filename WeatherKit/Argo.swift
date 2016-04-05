@@ -12,3 +12,7 @@ import Argo
 let toNSDate: Int -> Decoded<NSDate> = {
     .fromOptional(NSDate(timeIntervalSince1970: NSTimeInterval($0)))
 }
+
+let toTemperature : Float -> Decoded<Temperature> = {
+    .fromOptional(Temperature(value: $0))
+}

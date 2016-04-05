@@ -22,12 +22,19 @@ class ForecastCell: UITableViewCell {
     @IBOutlet weak var minTempLabel: UILabel!
     @IBOutlet weak var dayLabel: UILabel!
     
-    var forecast: DayForecast! {
+    var forecast: DayForecast? {
         didSet {
-            dayLabel.text = weekdayFormatter.stringFromDate(forecast.date)
-            maxTempLabel.text = "\(Int(round(forecast.temperatureMax)))"
-            minTempLabel.text = "\(Int(round(forecast.temperatureMin)))"
-            today = forecast.date.isInToday()
+            if let forecast = forecast {
+                dayLabel.text = weekdayFormatter.stringFromDate(forecast.date)
+                maxTempLabel.text = forecast.temperatureMax.toString()
+                minTempLabel.text = forecast.temperatureMin.toString()
+                today = forecast.date.isInToday()
+            } else {
+                dayLabel.text = ""
+                maxTempLabel.text = "-"
+                minTempLabel.text = "-"
+                today = false
+            }
         }
     }
     
