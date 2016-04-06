@@ -48,7 +48,40 @@ class ClientTests: XCTestCase {
         XCTAssertNotNil(onNext)
         XCTAssertNil(onError)
         XCTAssertFalse(onCompleted)
+    }
+    
+    func testRequestWithInvzlidJSON() {
+        let json = ["dummy": "text"]
+        let result: Result<AnyObject, NSError> = Result.Success(json)
+        let response = Alamofire.Response(request: nil, response: nil, data: nil, result: result)
         
+        let client = StubClient(baseURL: "")
+        client.responseJSON = response
+        
+        let network = NetworkTest(client: client, disposeBag: DisposeBag())
+        
+        let observable: Observable<DecodableTest> = network.request(.GET, urlPath: "", parameters: nil)
+        
+        var onNext: DecodableTest?
+        var onError: NetworkError?
+        var onCompleted = false
+        
+        observable.subscribe(
+            onNext: { (response) -> Void in
+                onNext = response
+            },
+            
+            onError: { (error) -> Void in
+                onError = error as? NetworkError
+            },
+            
+            onCompleted: { () -> Void in
+                onCompleted = true
+        }).addDisposableTo(network.disposeBag)
+        
+        XCTAssertNil(onNext)
+        XCTAssertNotNil(onError)
+        XCTAssertFalse(onCompleted)
     }
 }
 
