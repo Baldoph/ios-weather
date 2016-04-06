@@ -50,7 +50,7 @@ class ClientTests: XCTestCase {
         XCTAssertFalse(onCompleted)
     }
     
-    func testRequestWithInvzlidJSON() {
+    func testRequestWithInvalidJSON() {
         let json = ["dummy": "text"]
         let result: Result<AnyObject, NSError> = Result.Success(json)
         let response = Alamofire.Response(request: nil, response: nil, data: nil, result: result)
