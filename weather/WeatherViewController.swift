@@ -106,7 +106,7 @@ class WeatherViewController: UIViewController, BindableViewModel {
     }
 }
 
-// MARK: - Table View protocols
+// MARK: - ScrollView delegate methods
 extension WeatherViewController: UITableViewDelegate {
     
     func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
@@ -122,6 +122,7 @@ extension WeatherViewController: UITableViewDelegate {
     }
 }
 
+// MARK: - Animations
 extension WeatherViewController {
     private func setUpHeaderAnimation() {
         // Compute progress between bottom (table view is scrolled up) and top (is scrolled down) positions of header view

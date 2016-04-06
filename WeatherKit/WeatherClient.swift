@@ -9,7 +9,7 @@
 import Foundation
 import ReachabilitySwift
 
-public class WeatherClient: Client {
+public struct WeatherClient: Client {
     
     public init() {}
     

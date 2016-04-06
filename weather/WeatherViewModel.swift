@@ -91,9 +91,3 @@ extension WeatherViewModel {
         updateWeatherForCityName("Lyon")
     }
 }
-
-extension WeatherViewModel {
-    static func largeTemperaturePlacholder() -> String { return "--" }
-    static func temperaturePlacholder() -> String { return "-" }
-    static func copyPlacholder() -> String { return "-" }
-}
